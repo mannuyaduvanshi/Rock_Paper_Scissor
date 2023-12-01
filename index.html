@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="game">
+      <header class="header">
+        <div>
+          <h1 class="logo">Rock<br />Paper<br />Scissors</h1>
+        </div>
+
+        <div class="score-board">
+          <div class="score-card">
+            <p>Computer<br />Score</p>
+            <p class="computer-score">0</p>
+          </div>
+          <div class="score-card">
+            <p>Your<br />Score</p>
+            <p class="player-score">0</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Play -->
+      <div class="play">
+        <div class="play-wrapper">
+          <div class="rock" id="rock" onclick="getResult(this.id)">
+            <img src="assets/rock.png" alt="" width="160" height="160" />
+          </div>
+          <div class="paper" id="paper" onclick="getResult(this.id)">
+            <img src="assets/paper.png" alt="" width="160" height="160" />
+          </div>
+          <div class="scissor" id="scissor" onclick="getResult(this.id)">
+            <img src="assets/scissor.png" alt="" width="160" height="160" />
+          </div>
+        </div>
+        <div class="lines">
+          <div class="line2"></div>
+          <div class="line1"></div>
+          <div class="line3"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="result">
+        <div class="player-choice" style="position: relative">
+          <h3 class="choice-text">You Picked</h3>
+          <div style="position: relative">
+            <div class="decorate-winner decorate-winner_player"></div>
+            <img
+              id="player-choice_img"
+              style="position: relative; z-index: 4"
+              src="./assets/paper.png"
+              alt=""
+            />
+          </div>
+        </div>
+
+        <div class="result-wrapper" style="flex: 1">
+          <h2 class="result-text result-text_value"></h2>
+          <h3 class="result-text" style="font-size: 25px">Against PC</h3>
+          <button class="play-again_btn" onclick="showScreen('')">
+            Play Again
+          </button>
+        </div>
+
+        <div class="computer-choice" style="position: relative">
+          <h3 class="choice-text">PC Picked</h3>
+          <div style="position: relative">
+            <div class="decorate-winner decorate-winner_computer"></div>
+            <img
+              id="computer-choice_img"
+              style="position: relative; z-index: 4"
+              src="./assets/paper.png"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="end">
+      <img src="./assets/cup.png" />
+      <h1 class="end-text" style="margin-top: 32px">Hurray!!</h1>
+      <h2 class="end-text" style="font-size: 41px">You won the game</h2>
+      <button
+        class="play-again_btn"
+        style="margin-top: 58px"
+        onclick="playAgain()"
+      >
+        Play again
+      </button>
+    </div>
+
+    <div class="footer">
+      <div style="position: relative">
+        <button
+          class="footer_btn"
+          style="position: relative"
+          onclick="showRules(true)"
+        >
+          Rules
+        </button>
+        <div class="rules">
+          <div class="cross" onclick="showRules(false)">X</div>
+          <h2
+            style="color: white; text-transform: uppercase; text-align: center"
+          >
+            Game Rules
+          </h2>
+          <ul style="margin-top: 28px">
+            <li>
+              Rock beats scissors, scissors beat paper, and paper beats rock.
+            </li>
+            <li>
+              Agree ahead of time whether you'll count off “rock, paper,
+              scissors, shoot” or just “rock, paper, scissors.”
+            </li>
+            <li>
+              Use rock, paper, scissors to settle minor decisions or simply play
+              to pass the time
+            </li>
+            <li>
+              If both players lay down the same hand, each player lays down
+              another hand
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button class="footer_btn next-btn" onclick="winner()">Next</button>
+    </div>
+
+    <script>
+      const endScreen = document.querySelector(".end");
+      const gameScreen = document.querySelector(".game");
+      const playScreen = document.querySelector(".play");
+      const resultScreen = document.querySelector(".result");
+      const playerChoiceImage = document.querySelector("#player-choice_img");
+      const computerChoiceImage = document.querySelector(
+        "#computer-choice_img"
+      );
+      const playerDecoration = document.querySelector(
+        ".decorate-winner_player"
+      );
+      const computerDecoration = document.querySelector(
+        ".decorate-winner_computer"
+      );
+      const resultText = document.querySelector(".result-text_value");
+      const nextBtn = document.querySelector(".next-btn");
+      const rulesBanner = document.querySelector(".rules");
+
+      let playerScore = 0;
+      let computerScore = 0;
+      let result = "";
+
+      function showRules(e) {
+        if (e) {
+          rulesBanner.style.display = "block";
+        } else {
+          rulesBanner.style.display = "none";
+        }
+      }
+
+      function showScreen(result, player, computer) {
+        if (result) {
+          playerChoiceImage.src = `assets/${player}.png`;
+          computerChoiceImage.src = `assets/${computer}.png`;
+          playScreen.style.display = "none";
+          resultScreen.style.display = "flex";
+          if (result === "computer") {
+            computerDecoration.style.display = "block";
+            playerDecoration.style.display = "none";
+            resultText.innerHTML = "You Lost";
+            nextBtn.style.display = "none";
+          } else if (result === "player") {
+            computerDecoration.style.display = "none";
+            playerDecoration.style.display = "block";
+            resultText.innerHTML = "You Win";
+            nextBtn.style.display = "block";
+          } else {
+            computerDecoration.style.display = "none";
+            playerDecoration.style.display = "none";
+            resultText.innerHTML = "Tie up";
+            nextBtn.style.display = "none";
+          }
+        } else {
+          playerChoiceImage.src = "";
+          computerChoiceImage.src = "";
+          playScreen.style.display = "block";
+          resultScreen.style.display = "none";
+          computerDecoration.style.display = "none";
+          playerDecoration.style.display = "none";
+          nextBtn.style.display = "none";
+        }
+      }
+
+      showScreen(result);
+
+      function reset() {
+        playerScore = 0;
+        computerScore = 0;
+        const playerScoreBoard = document.querySelector(".player-score");
+        const computerScoreBoard = document.querySelector(".computer-score");
+        playerScoreBoard.textContent = 0;
+        computerScoreBoard.textContent = 0;
+        result = "";
+      }
+
+      function winner() {
+        reset();
+        gameScreen.style.display = "none";
+        endScreen.style.display = "flex";
+        nextBtn.style.display = "none";
+      }
+
+      function playAgain() {
+        reset();
+        gameScreen.style.display = "block";
+        endScreen.style.display = "none";
+        showScreen(result);
+      }
+
+      function getResult(e) {
+        const choices = ["rock", "paper", "scissor"];
+        const player = document.getElementById(e).id;
+        const computer = choices[Math.floor(Math.random() * choices.length)];
+        const playerScoreBoard = document.querySelector(".player-score");
+        const computerScoreBoard = document.querySelector(".computer-score");
+
+        if (player === computer) {
+          result = "tie";
+        } else if (player == "rock") {
+          if (computer == "paper") {
+            result = "computer";
+            computerScore++;
+            computerScoreBoard.textContent = computerScore;
+          } else {
+            result = "player";
+            playerScore++;
+            playerScoreBoard.textContent = playerScore;
+          }
+        } else if (player == "scissor") {
+          if (computer == "rock") {
+            result = "computer";
+            computerScore++;
+            computerScoreBoard.textContent = computerScore;
+          } else {
+            result = "player";
+            playerScore++;
+            playerScoreBoard.textContent = playerScore;
+          }
+        } else if (player == "paper") {
+          if (computer == "scissor") {
+            result = "computer";
+            computerScore++;
+            computerScoreBoard.textContent = computerScore;
+          } else {
+            result = "player";
+            playerScore++;
+            playerScoreBoard.textContent = playerScore;
+          }
+        }
+
+        showScreen(result, player, computer);
+      }
+    </script>
+  </body>
+</html>
